@@ -56,54 +56,66 @@
 			</div>
 		</ng-container>
 		<ng-container *ngSwitchCase="tabs.Hierarchy">
-			<div class="project-legent">
-				<form class="form-inline">
-					<div class="form-group">
-						<label class="sr-only">Hierarchy</label>
-						<p class="form-control-static">Hierarchy 1</p>
-					</div>
-					<div class="form-group">
-						<label for="hierarchy1" class="sr-only">Hierarchy</label>
-						<input type="text" class="form-control input-sm" id="hierarchy1" disabled="" placeholder="Building" [(ngModel)]="model.types.level1.name" name="level1">
-					</div>
-					<div class="form-group" *ngIf="model.types.level2">
-						<label class="sr-only">Hierarchy</label>
-						<p class="form-control-static">Hierarchy 2</p>
-					</div>
-					<div class="form-group" *ngIf="model.types.level2">
-						<label for="hierarchy2" class="sr-only">Hierarchy</label>
-						<input type="text" class="form-control input-sm" id="hierarchy2" placeholder="Floor" [(ngModel)]="model.types.level2.name" name="level2">
-					</div>
-					<div class="form-group" *ngIf="model.types.level3">
-						<label class="sr-only">Hierarchy</label>
-						<p class="form-control-static">Hierarchy 3</p>
-					</div>
-					<div class="form-group" *ngIf="model.types.level3">
-						<label for="hierarchy3" class="sr-only">Hierarchy</label>
-						<input type="text" class="form-control input-sm" id="hierarchy3" placeholder="Room" [(ngModel)]="model.types.level3.name" name="level3">
-					</div>
-					<div class="form-group" *ngIf="model.types.level4">
-						<label class="sr-only">Hierarchy</label>
-						<p class="form-control-static">Hierarchy 4</p>
-					</div>
-					<div class="form-group" *ngIf="model.types.level5">
-						<label for="hierarchy4" class="sr-only">Hierarchy</label>
-						<input type="text" class="form-control input-sm" id="hierarchy4" placeholder="" [(ngModel)]="model.types.level4.name" name="level4">
-					</div>
-				</form>
-			</div>
 			<div class="row-wrap">
-				<tree 
-					[editable]="true"
-					[deepCount]="deepCount"
-					[level]="model.hierarchy" 
-					[handler]="addLevel" 
-					[handlerRemove]="removeLevel" 
-					[handlerFirst]="levelFirst"
-					(toggle)="toggleLevel($event)"
-					(clickRemoveHandler)="removeLevel($event)"
-					(clickHandler)="addLevel($event)" class="hierarchy">
-				</tree>
+				<div class="control-panel">
+					<span class="btn btn-link" (click)="changeView()" [innerHTML]="currentViewLinkText"></span>
+				</div>
+			</div>			
+			<div [ngSwitch]="currentView">
+				<div *ngSwitchCase="view.Editor">
+					<div class="project-legent" *ngIf="model.types">
+						<form class="form-inline">
+							<div class="form-group" *ngIf="model.types.level1">
+								<label class="sr-only">Hierarchy</label>
+								<p class="form-control-static">Hierarchy 1</p>
+							</div>
+							<div class="form-group" *ngIf="model.types.level1">
+								<label for="hierarchy1" class="sr-only">Hierarchy</label>
+								<input type="text" class="form-control input-sm" id="hierarchy1" disabled="" placeholder="Building" [(ngModel)]="model.types.level1.name" name="level1">
+							</div>
+							<div class="form-group" *ngIf="model.types.level2">
+								<label class="sr-only">Hierarchy</label>
+								<p class="form-control-static">Hierarchy 2</p>
+							</div>
+							<div class="form-group" *ngIf="model.types.level2">
+								<label for="hierarchy2" class="sr-only">Hierarchy</label>
+								<input type="text" class="form-control input-sm" id="hierarchy2" placeholder="Floor" [(ngModel)]="model.types.level2.name" name="level2">
+							</div>
+							<div class="form-group" *ngIf="model.types.level3">
+								<label class="sr-only">Hierarchy</label>
+								<p class="form-control-static">Hierarchy 3</p>
+							</div>
+							<div class="form-group" *ngIf="model.types.level3">
+								<label for="hierarchy3" class="sr-only">Hierarchy</label>
+								<input type="text" class="form-control input-sm" id="hierarchy3" placeholder="Room" [(ngModel)]="model.types.level3.name" name="level3">
+							</div>
+							<div class="form-group" *ngIf="model.types.level4">
+								<label class="sr-only">Hierarchy</label>
+								<p class="form-control-static">Hierarchy 4</p>
+							</div>
+							<div class="form-group" *ngIf="model.types.level5">
+								<label for="hierarchy4" class="sr-only">Hierarchy</label>
+								<input type="text" class="form-control input-sm" id="hierarchy4" placeholder="" [(ngModel)]="model.types.level4.name" name="level4">
+							</div>
+						</form>
+					</div>
+					<div class="row-wrap">
+						<tree 
+							[editable]="true"
+							[deepCount]="deepCount"
+							[level]="model.hierarchy" 
+							[handler]="addLevel" 
+							[handlerRemove]="removeLevel" 
+							[handlerFirst]="levelFirst"
+							(toggle)="toggleLevel($event)"
+							(clickRemoveHandler)="removeLevel($event)"
+							(clickHandler)="addLevel($event)" class="hierarchy">
+						</tree>
+					</div>
+				</div>					
+				<div *ngSwitchCase="view.Viewer">
+					<d3-tree></d3-tree>
+				</div>					
 			</div>
 		</ng-container>
 		<ng-container *ngSwitchCase="tabs.Documents">

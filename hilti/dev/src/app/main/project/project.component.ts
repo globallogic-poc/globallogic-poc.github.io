@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Find } from './project.service';
-import { Tab } from '../../common/enum.service';
+import { Tab, View } from '../../common/enum.service';
 
 @Component({
 	selector: 'project',
@@ -11,6 +11,9 @@ import { Tab } from '../../common/enum.service';
 export class ProjectComponent implements OnInit {
 	@Input() model: any;
 	tabs = Tab;
+	view = View;
+	currentView: any;
+	currentViewLinkText: string;
 	level: Object;
 	deepCount: Number = 0;
 	activeTab: number;
@@ -24,6 +27,19 @@ export class ProjectComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.activeTab = this.tabs.Project;
+		this.changeView();
+	}
+	changeView():void {
+		if(this.currentView === this.view.Editor){
+			this.currentView = this.view.Viewer;
+			this.currentViewLinkText = 'Back to editor';
+		} else if(this.currentView === this.view.Viewer){
+			this.currentView = this.view.Editor;
+			this.currentViewLinkText = 'Switch to view full tree';
+		} else {
+			this.currentView = this.view.Editor;
+			this.currentViewLinkText = 'Switch to view full tree';
+		}
 	}
 	levelFirst(hierarchy): void {
 		if (!hierarchy.hasOwnProperty('children')){
