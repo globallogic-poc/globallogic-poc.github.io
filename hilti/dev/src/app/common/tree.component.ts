@@ -187,7 +187,7 @@ export class TreeComponent implements OnInit {
 		if (this.editable) {
 			if (!this.clicked) {
 				this.clicked = true;
-				this.toggleState(level, true)
+				this.toggleState(level, true);
 				this.clickHandler.emit(level);
 			}
 		}
@@ -208,6 +208,7 @@ export class TreeComponent implements OnInit {
 			if (action === 'add'){
 				if (this.handlerFirst) { 
 					this.handlerFirst(level);
+					this.toggleState(level, true);
 				} else {
 					this.handleClick(level);
 				}

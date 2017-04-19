@@ -63,7 +63,9 @@ export class D3TreeComponent implements OnInit {
 		root.y0 = 0;
 
 		// Collapse after the second level
-		root.children.forEach(collapse);
+		if (!!root.children){
+			root.children.forEach(collapse);
+		}
 
 		update(root);
 

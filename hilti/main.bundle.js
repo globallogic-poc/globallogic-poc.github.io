@@ -180,7 +180,9 @@ var D3TreeComponent = (function () {
         root.x0 = this.height / 2;
         root.y0 = 0;
         // Collapse after the second level
-        root.children.forEach(collapse);
+        if (!!root.children) {
+            root.children.forEach(collapse);
+        }
         update(root);
         // Collapse the node and all it's children
         function collapse(d) {
@@ -417,6 +419,7 @@ var TreeComponent = (function () {
             if (action === 'add') {
                 if (this.handlerFirst) {
                     this.handlerFirst(level);
+                    this.toggleState(level, true);
                 }
                 else {
                     this.handleClick(level);
