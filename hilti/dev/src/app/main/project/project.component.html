@@ -8,7 +8,10 @@
 			<li [class.active]="activeTab === tabs.Users"><a href="#" (click)="activeTab = tabs.Users">Users</a></li>
 		</ol>
 	</div>
-	<div class="row" [ngSwitch]="activeTab">
+	<div class="row modal-body-container" [ngSwitch]="activeTab">
+		<div class="modal-body-wrapper">
+			
+		
 		<ng-container *ngSwitchCase="tabs.Project">
 			<div class="row-wrap col-lg-6">
 				<ul>
@@ -56,14 +59,10 @@
 			</div>
 		</ng-container>
 		<ng-container *ngSwitchCase="tabs.Hierarchy">
-			<div class="row-wrap">
-				<div class="control-panel">
-					<span class="btn btn-link" (click)="changeView()" [innerHTML]="currentViewLinkText"></span>
-				</div>
-			</div>			
+	
 			<div [ngSwitch]="currentView">
 				<div *ngSwitchCase="view.Editor">
-					<div class="project-legent" *ngIf="model.types">
+					<div class="project-legent" *ngIf="model.types" [hidden]="!openedLevelHeadingPanel">
 						<form class="form-inline">
 							<div class="form-group" *ngIf="model.types.level1">
 								<label class="sr-only">Hierarchy</label>
@@ -98,7 +97,16 @@
 								<input type="text" class="form-control input-sm" id="hierarchy4" placeholder="" [(ngModel)]="model.types.level4.name" name="level4">
 							</div>
 						</form>
+						<span class="btn-close glyphicon glyphicon-remove" (click)="toggleLevelHeadingPanel()"></span>
 					</div>
+				</div>
+				<div class="row-wrap">
+					<div class="control-panel"  [ngClass]="{'back': currentView === view.Viewer}">
+						<span class="glyphicon glyphicon-share" [ngClass]="{'glyphicon-chevron-left': currentView === view.Viewer}" (click)="changeView()" [innerHTML]="currentViewLinkText"></span>
+						<span class="glyphicon glyphicon-edit" *ngIf="currentView !== view.Viewer && !openedLevelHeadingPanel" (click)="toggleLevelHeadingPanel()">Edit</span>
+					</div>
+				</div>
+				<div *ngSwitchCase="view.Editor">
 					<div class="row-wrap">
 						<tree 
 							[editable]="true"
@@ -112,9 +120,9 @@
 							(clickHandler)="addLevel($event)" class="hierarchy">
 						</tree>
 					</div>
-				</div>					
+				</div>		
 				<div *ngSwitchCase="view.Viewer">
-					<d3-tree></d3-tree>
+					<d3-tree [data]="model.hierarchy"></d3-tree>
 				</div>					
 			</div>
 		</ng-container>
@@ -145,5 +153,6 @@
 				</ul>
 			</div>
 		</ng-container>
+		</div>
 	</div>
 </div>

@@ -19,6 +19,7 @@ export class ProjectComponent implements OnInit {
 	activeTab: number;
 	dataFetch: Boolean = false;
 	statistic: Object = {};
+	openedLevelHeadingPanel: Boolean = false;
 
 
 	constructor(
@@ -35,11 +36,14 @@ export class ProjectComponent implements OnInit {
 			this.currentViewLinkText = 'Back to editor';
 		} else if(this.currentView === this.view.Viewer){
 			this.currentView = this.view.Editor;
-			this.currentViewLinkText = 'Switch to view full tree';
+			this.currentViewLinkText = 'View';
 		} else {
 			this.currentView = this.view.Editor;
-			this.currentViewLinkText = 'Switch to view full tree';
+			this.currentViewLinkText = 'View';
 		}
+	}
+	toggleLevelHeadingPanel(): void{
+		this.openedLevelHeadingPanel = !this.openedLevelHeadingPanel;
 	}
 	levelFirst(hierarchy): void {
 		if (!hierarchy.hasOwnProperty('children')){

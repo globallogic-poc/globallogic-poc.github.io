@@ -7,7 +7,7 @@
 		</div>
 	</div>
 	<div class="row tools">
-		<div class="filters col-lg-9">
+		<div class="filters col-xs-9 col-sm-9 col-md-9 col-lg-9">
 			<ul class="nav nav-pills">
 				<li role="presentation" [class.active]="projectFilter === status.Active">
 					<a href="#" (click)="projectFilter = status.Active; $event.stopPropagation()">Active</a>
@@ -17,7 +17,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="search-box col-lg-3">
+		<div class="search-box col-xs-3 col-sm-3 col-md-3 col-lg-3">
 			<input type="text" class="form-control" [(ngModel)]="projectFilterName" placeholder="Search by project name">
 		</div>
 	</div>
@@ -26,17 +26,17 @@
 			<div class="row">
 				<ul class="head">
 					<li>
-						<div class="project-name col-lg-8">
+						<div class="project-name col-xs-10 col-sm-10 col-md-9 col-lg-8">
 							<strong>Name</strong>
 						</div>
 					</li>
 					<li>
-						<div class="project-status col-lg-3">
+						<div class="project-status col-xs-1 col-sm-1 col-md-2 col-lg-3">
 							<strong>Status</strong>
 						</div>
 					</li>
 					<li>
-						<div class="project-status col-lg-1">
+						<div class="project-status col-xs-1 col-sm-1 col-md-1 col-lg-1">
 							<strong></strong>
 						</div>
 					</li>
@@ -45,13 +45,13 @@
 			<div class="row">
 				<ul class="list">
 					<li *ngFor="let project of attrs.Data.projects | fields: projectFilterName: projectFilter" (click)="showDetails(project)">
-						<div class="project-name col-lg-8">
+						<div class="project-name col-xs-10 col-sm-10 col-md-9 col-lg-8">
 							<span>{{project.name}}</span>
 						</div>
-						<div class="project-status col-lg-3">
+						<div class="project-status col-xs-1 col-sm-1 col-md-2 col-lg-3">
 							<span [class]="project.status === status.Active ? 'text-success' : 'text-muted'" [innerHtml]="project.status === status.Active ? 'Active' : 'Inavtive'"></span>
 						</div>
-						<div class="project-action col-lg-1">
+						<div class="project-action col-xs-1 col-sm-1 col-md-1 col-lg-1">
 							<span>X</span>
 						</div>
 					</li>

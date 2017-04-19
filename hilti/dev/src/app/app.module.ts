@@ -9,6 +9,7 @@ import { FocusDirective } from './common/focus.directive';
 import { GenerateInfo, Find } from './main/project/project.service';
 import { MainComponent } from './main/main.component';
 import { TreeComponent } from './common/tree.component';
+import { D3TreeComponent } from './common/d3tree.component';
 
 import { StatusPipe } from './main/status.pipe';
 import { ModalComponent } from './common/modal.component';
@@ -23,6 +24,7 @@ import { ProjectComponent } from './main/project/project.component';
     ModalComponent,
     StatusPipe,
     TreeComponent,
+    D3TreeComponent,
     ProjectComponent
   ],
   imports: [
