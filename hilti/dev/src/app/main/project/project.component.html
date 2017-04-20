@@ -62,7 +62,44 @@
 	
 			<div [ngSwitch]="currentView">
 				<div *ngSwitchCase="view.Editor">
-					<div class="project-legent" *ngIf="model.types" [hidden]="!openedLevelHeadingPanel">
+					<div class="project-legent" [hidden]="!openedLevelHeadingPanel">
+						<form class="form-inline">
+							<div class="form-group">
+								<label class="sr-only">Hierarchy</label>
+								<p class="form-control-static">Hierarchy 1</p>
+							</div>
+							<div class="form-group">
+								<label for="hierarchy1" class="sr-only">Hierarchy</label>
+								<input type="text" class="form-control input-sm" id="hierarchy1" disabled="" placeholder="Building" [(ngModel)]="levelsRoots.h1" name="level1">
+							</div>
+							<div class="form-group">
+								<label class="sr-only">Hierarchy</label>
+								<p class="form-control-static">Hierarchy 2</p>
+							</div>
+							<div class="form-group">
+								<label for="hierarchy2" class="sr-only">Hierarchy</label>
+								<input type="text" class="form-control input-sm" id="hierarchy2" placeholder="Floor" [(ngModel)]="levelsRoots.h2" name="level2" (ngModelChange)="changeRoot($event, 'h2')">
+							</div>
+							<div class="form-group">
+								<label class="sr-only">Hierarchy</label>
+								<p class="form-control-static">Hierarchy 3</p>
+							</div>
+							<div class="form-group">
+								<label for="hierarchy3" class="sr-only">Hierarchy</label>
+								<input type="text" class="form-control input-sm" id="hierarchy3" placeholder="Room" [(ngModel)]="levelsRoots.h3" name="level3" (ngModelChange)="changeRoot($event, 'h3')">
+							</div>
+							<div class="form-group">
+								<label class="sr-only">Hierarchy</label>
+								<p class="form-control-static">Hierarchy 4</p>
+							</div>
+							<div class="form-group">
+								<label for="hierarchy4" class="sr-only">Hierarchy</label>
+								<input type="text" class="form-control input-sm" id="hierarchy4" placeholder="" [(ngModel)]="levelsRoots.h4" name="level4" (ngModelChange)="changeRoot($event, 'h4')">
+							</div>
+						</form>
+						<span class="btn-close glyphicon glyphicon-remove" (click)="toggleLevelHeadingPanel()"></span>
+					</div>
+					<!-- <div class="project-legent" *ngIf="model.types" [hidden]="!openedLevelHeadingPanel">
 						<form class="form-inline">
 							<div class="form-group" *ngIf="model.types.level1">
 								<label class="sr-only">Hierarchy</label>
@@ -98,7 +135,7 @@
 							</div>
 						</form>
 						<span class="btn-close glyphicon glyphicon-remove" (click)="toggleLevelHeadingPanel()"></span>
-					</div>
+					</div> -->
 				</div>
 				<div class="row-wrap">
 					<div class="control-panel"  [ngClass]="{'back': currentView === view.Viewer}">

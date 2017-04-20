@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { Enums } from '../common/enum.service';
+import { GenerateInfo } from '../main/project/project.service';
 
 @Component({
   selector: 'tree',
@@ -180,16 +181,19 @@ export class TreeComponent implements OnInit {
 	@Output() toggle: EventEmitter<any> = new EventEmitter();
 
 	clicked: Boolean = false;
+	model = this.level;
+
+	constructor(
+		private generator: GenerateInfo
+	) {}
 
 	ngOnInit(): void {}
 
 	handleClick(level): void {
 		if (this.editable) {
-			if (!this.clicked) {
-				this.clicked = true;
-				this.toggleState(level, true);
-				this.clickHandler.emit(level);
-			}
+			this.clicked = true;
+			this.toggleState(level, true);
+			this.clickHandler.emit(level);
 		}
 	}
 

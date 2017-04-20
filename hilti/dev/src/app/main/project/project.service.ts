@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
 
+const reduce = Function.bind.call(Function.call, Array.prototype.reduce);
+const isEnumerable = Function.bind.call(Function.call, Object.prototype.propertyIsEnumerable);
+const concat = Function.bind.call(Function.call, Array.prototype.concat);
+const keys = Reflect.ownKeys;
+
 @Injectable() export class Find {
 	byIndex(base, key, val) {
 		if (base.children && base.children.length) {
@@ -22,6 +27,33 @@ import { Injectable } from '@angular/core';
 		}
 		return null;
 	}
+	static values(O) {
+		return reduce(keys(O), (v, k) => concat(v, typeof k === 'string' && isEnumerable(O, k) ? [O[k]] : []), []);
+	}
+
+	static byLevel(obj, level){
+		let result = [];
+		let depth = 0;
+
+		go(obj);
+
+		return result;
+
+		function go(obj) {
+			depth++;
+			if (depth-1 < level) {
+				if (!!obj.children && !!obj.children.length){
+					for (let i = 0; i < obj.children.length; i++) {
+						go(obj.children[i]);
+					}
+				}
+				depth--;
+			} else if (depth - 1 === level) {
+				result.push(obj);
+				depth--;
+			}
+		}
+	}
 }
 
 @Injectable() export class GenerateInfo {
@@ -40,6 +72,17 @@ import { Injectable } from '@angular/core';
 		project.types = stats[1];
 		return project;
 	}
+	mapTypes(project, types): any {
+		let typesName = Find.values(types);
+		let building = project.hierarchy;
+		
+		for (let i = 1; i < typesName.length; i++){
+			let buildingLevelEntity = Find.byLevel(building, i);
+			for (let y = 0; y < buildingLevelEntity.length; y++){
+				buildingLevelEntity[y].type = typesName[i];
+			}
+		}
+	}
 	stats(project):any {
 		let levelDeep = 0;
 		let result: any = {};
@@ -52,7 +95,7 @@ import { Injectable } from '@angular/core';
 			let o = {};
 			for (let key in result) {
 				count++;
-				o['level' + count] = {
+				o['h' + count] = {
 					name: key,
 					count: result[key].count
 				};

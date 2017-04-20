@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Find } from './project.service';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Find, GenerateInfo } from './project.service';
 import { Tab, View } from '../../common/enum.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { Tab, View } from '../../common/enum.service';
 	styleUrls: ['./project.component.scss']
 })
 
-export class ProjectComponent implements OnInit {
+export class ProjectComponent implements OnInit, OnChanges {
 	@Input() model: any;
 	tabs = Tab;
 	view = View;
@@ -20,15 +20,37 @@ export class ProjectComponent implements OnInit {
 	dataFetch: Boolean = false;
 	statistic: Object = {};
 	openedLevelHeadingPanel: Boolean = false;
+	levelsRoots: any = { h1: 'Building', h2: '', h3: '', h4: '' };
 
 
 	constructor(
-		private findObject: Find
+		private findObject: Find, 
+		private generator: GenerateInfo
 	) { }
 
 	ngOnInit(): void {
 		this.activeTab = this.tabs.Project;
 		this.changeView();
+	}
+	ngOnChanges(changes: SimpleChanges) {
+		if (!changes['model'].firstChange){
+			let mTypes = this.model.types;
+			let lRoots = this.levelsRoots;
+			for (let key in lRoots) {
+				if (mTypes.hasOwnProperty[key]){
+					lRoots[key] = mTypes[key];
+				} else {
+					mTypes[key] = '';
+					lRoots[key] = mTypes[key];
+				}
+			}
+		}
+	}
+	changeRoot(title, root):void{
+		this.levelsRoots[root] = title;
+		
+		this.generator.mapTypes(this.model, this.levelsRoots);
+		this.generator.extend(this.model);
 	}
 	changeView():void {
 		if(this.currentView === this.view.Editor){

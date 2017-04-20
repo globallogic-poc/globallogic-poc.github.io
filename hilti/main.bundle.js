@@ -79,7 +79,7 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(133);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component__ = __webpack_require__(135);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__common_focus_directive__ = __webpack_require__(138);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__main_project_project_service__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__main_project_project_service__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__main_main_component__ = __webpack_require__(140);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__common_tree_component__ = __webpack_require__(139);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__common_d3tree_component__ = __webpack_require__(137);
@@ -377,6 +377,7 @@ var _a;
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_enum_service__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__main_project_project_service__ = __webpack_require__(45);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TreeComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -389,21 +390,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var TreeComponent = (function () {
-    function TreeComponent() {
+    function TreeComponent(generator) {
+        this.generator = generator;
         this.clickRemoveHandler = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* EventEmitter */]();
         this.clickHandler = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* EventEmitter */]();
         this.toggle = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* EventEmitter */]();
         this.clicked = false;
+        this.model = this.level;
     }
     TreeComponent.prototype.ngOnInit = function () { };
     TreeComponent.prototype.handleClick = function (level) {
         if (this.editable) {
-            if (!this.clicked) {
-                this.clicked = true;
-                this.toggleState(level, true);
-                this.clickHandler.emit(level);
-            }
+            this.clicked = true;
+            this.toggleState(level, true);
+            this.clickHandler.emit(level);
         }
     };
     TreeComponent.prototype.handleRemoveClick = function (level) {
@@ -480,10 +482,11 @@ TreeComponent = __decorate([
         selector: 'tree',
         template: "\n  \t<div class=\"level-deep\" [ngClass]=\"['level-'+deepCount]\">\n\t  \t<span class=\"title\" [class.deepend]=\"!level?.children\">\n\t  \t\t<em *ngIf=\"!!level.children && !!level.children.length\" [ngClass]=\"{'glyphicon-menu-down': level?.children && level.open, 'glyphicon-menu-right': level?.children && !level.open}\" (click)=\"toggleState(level)\" class=\"glyphicon expand\" aria-hidden=\"true\"></em>\n\t  \t\t<strong *ngIf=\"!level.edit\">{{level.name + (level?.description ? ' ' + level?.description : '' )}}</strong>\n\t  \t\t<em class=\"glyphicon glyphicon-pencil\" *ngIf=\"!level.edit\" (click)=\"edit(level)\"></em>\n\t  \t\t<span class=\"add-link\" *ngIf=\"!level.edit\" (click)=\"singleClick(level, 'add');\">Add</span>\n\t  \t\t<span class=\"delete-link\" *ngIf=\"level.edit\" (click)=\"handleRemoveClick(level);\">Delete</span>\n\t\t  \t<div class=\"input-control\" *ngIf=\"level.edit\">\n\t\t\t\t<input type=\"text\" name=\"title\" [focus]=\"level.edit\" [(ngModel)]=\"level.name\" />\n\t\t\t\t<span class=\"btn-ok\" (click)=\"level.edit=false\">Ok</span>\n\t\t  \t</div>\n\t  \t</span>\n\t\t<ul class=\"tree-component\" [hidden]=\"!level.open\" *ngIf=\"level?.children\">\n\t\t\t<li *ngFor=\"let level of level?.children\">\n\t  \t\t\t<tree \n\t  \t\t\t\t[editable]=\"editable\"\n\t  \t\t\t\t[deepCount]=\"deepCount\"\n\t  \t\t\t\t[level]=\"level\" \n\t  \t\t\t\t[handler]=\"handleClick\" \n\t  \t\t\t\t[handlerRemove]=\"handleRemoveClick\" \n\t  \t\t\t\t(toggle)=\"toggleState($event)\"\n\t\t\t\t\t(clickRemoveHandler)=\"handleRemoveClick($event)\"\n\t  \t\t\t\t(clickHandler)=\"handler($event);\">\n  \t\t\t\t</tree>\n\t\t\t</li>\n\t\t</ul>\n  \t</div>\n  ",
         styles: ["\n  \t.level-deep{\n  \t\tfloat: left;\n  \t\tclear: both;\n  \t\tposition: relative;\n  \t}\n  \t.level-deep .level-deep {\n\t    margin: 0 0 0 -13px;\n\t    padding: 0 0 0 13px;  \t\t\n  \t}\n\n  \t.level-deep ul li:not(:last-child) .level-deep:before{\n\t\tcontent: \"\";\n\t\tposition: absolute;\n\t\tleft: -1px;\n\t\ttop: 20px;\n\t\twidth: 1px;\n\t\theight: 100%;\n\t\tborder-left: 1px solid #c5dceb;\n  \t}\n\t.level-deep ul{\n\t\tmargin: 0;\n\t\tpadding: 0 0 0 30px;\n\t\tlist-style: none;\n\t\tposition: relative;\n\t}\n\t.level-deep span,\n\t.level-deep ul li{\n\t\tcursor: pointer;\n\t\tposition: relative;\n\t\tpadding: 0 0 0 5px;\n\t\tline-height: 20px;\n\t}\n\t.level-deep span.title .input-control{\n\t\tfloat: left;\n\t}\n\t.level-deep span.title .input-control input:focus{\n\t\toutline: none;\n\t}\n\t.level-deep span.title .input-control input{\n\t\tborder: 0;\n\t\tpadding: 0;\n\t\tfloat: left:\n\t}\n\t.level-deep span.title .input-control .btn-ok{\n\t\tfloat: right;\n\t\theight: 38px;\n\t\twidth: 38px;\n\t\tbackground: #c5dceb;\n\t\tborder-top-right-radius: 19px;\n\t\tborder-bottom-right-radius: 19px;\n\t\tline-height: 38px;\n\t\tcolor: #8EBBD9;\n\t\tmargin: -8px;\n\t}\n\t.level-deep span.title{\n\t\tborder: 1px solid #8EBBD9;\n\t\tborder-radius: 20px;\n\t\tpadding: 8px 8px 8px 14px;\n\t\tmargin-bottom: 5px;\n\t\tfloat: left;\n\t\tclear: both;\n\t\tposition: relative;\n\t\tbackground: #fff;\n\t}\n\t.level-deep span.title strong{\n\t\tfont-weight: normal;\n\t}\n\n\t.level-deep span.title .delete-link,\n\t.level-deep span.title .add-link{\n\t\tposition: absolute;\n\t\tbottom: 8px;\n\t\tright: -36px;\n\t\tcolor: #8EBBD9;\n\t\tfont-size: 12px;\n\t}\n\n\t.level-deep span.title .delete-link{\n\t\tright: -50px;\n\t}\n\n\t.level-deep ul li:first-child li li li span.title:before,\n\t.level-deep ul li:first-child li li span.title:before,\n\t.level-deep ul li:first-child li span.title:before,\n\t.level-deep span.title:before{\n\t\tcontent: \"\";\n\t\tposition: absolute;\n\t\tleft: -15px;\n\t\ttop: -25px;\n\t\twidth: 15px;\n\t\theight: 44px;\n\t\tbackground: url(\"data:image/svg+xml;utf8," + __WEBPACK_IMPORTED_MODULE_1__common_enum_service__["c" /* Enums */].App.icons.corner + "\") no-repeat;\n\t}\n\t.level-deep ul li:first-child li:first-child li:first-child li:first-child span.title:before,\n\t.level-deep ul li:first-child li:first-child li:first-child span.title:before,\n\t.level-deep ul li:first-child li:first-child span.title:before,\n\t.level-deep ul li:first-child span.title:before{\n\t\theight: 26px;\n\t\ttop: -7px;\n\t\tbackground: url(\"data:image/svg+xml;utf8," + __WEBPACK_IMPORTED_MODULE_1__common_enum_service__["c" /* Enums */].App.icons.cornerSmall + "\") no-repeat;\n\t}\n\n\t.level-deep span.title.deepend:hover{}\n\t.level-deep span.title.deepend em.glyphicon{}\n\n\t.level-deep span.title em.glyphicon:hover{\n\t\topacity: 1;\n\t}\n\t.level-deep span.title em.glyphicon.glyphicon-pencil{\n\t\tborder: 0;\n\t    margin: -10px -10px -10px 0;\n\t}\n\t.level-deep span.title em.glyphicon{\n\t    padding: 0 0 0 7px;\n\t    float: right;\n\t    border: 1px dashed #000;\n\t    border-radius: 19px;\n\t    padding: 5px;\n\t    width: 38px;\n\t    height: 38px;\n\t    display: block;\n\t    line-height: 22px;\n\t    margin: -10px -10px -10px 10px;\n\t    text-align: center;\n\t    opacity: 0.7;\n\t}\n\t.level-deep span.title em.glyphicon.expand{\n\t\tfloat: left;\n\t\tmargin: -10px 10px -10px -14px;\n\t}\n\t.level-deep span.title em.glyphicon:before{\n\t\tfont-size: 10px;\n\t}\n  "]
-    })
+    }),
+    __metadata("design:paramtypes", [typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2__main_project_project_service__["a" /* GenerateInfo */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__main_project_project_service__["a" /* GenerateInfo */]) === "function" && _d || Object])
 ], TreeComponent);
 
-var _a, _b, _c;
+var _a, _b, _c, _d;
 //# sourceMappingURL=tree.component.js.map
 
 /***/ }),
@@ -495,7 +498,7 @@ var _a, _b, _c;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_enum_service__ = __webpack_require__(44);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__common_modal_component__ = __webpack_require__(78);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__main_project_project_service__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__main_project_project_service__ = __webpack_require__(45);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MainComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -548,7 +551,7 @@ var _a, _b;
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__project_service__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__project_service__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__common_enum_service__ = __webpack_require__(44);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProjectComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -564,18 +567,40 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var ProjectComponent = (function () {
-    function ProjectComponent(findObject) {
+    function ProjectComponent(findObject, generator) {
         this.findObject = findObject;
+        this.generator = generator;
         this.tabs = __WEBPACK_IMPORTED_MODULE_2__common_enum_service__["a" /* Tab */];
         this.view = __WEBPACK_IMPORTED_MODULE_2__common_enum_service__["b" /* View */];
         this.deepCount = 0;
         this.dataFetch = false;
         this.statistic = {};
         this.openedLevelHeadingPanel = false;
+        this.levelsRoots = { h1: 'Building', h2: '', h3: '', h4: '' };
     }
     ProjectComponent.prototype.ngOnInit = function () {
         this.activeTab = this.tabs.Project;
         this.changeView();
+    };
+    ProjectComponent.prototype.ngOnChanges = function (changes) {
+        if (!changes['model'].firstChange) {
+            var mTypes = this.model.types;
+            var lRoots = this.levelsRoots;
+            for (var key in lRoots) {
+                if (mTypes.hasOwnProperty[key]) {
+                    lRoots[key] = mTypes[key];
+                }
+                else {
+                    mTypes[key] = '';
+                    lRoots[key] = mTypes[key];
+                }
+            }
+        }
+    };
+    ProjectComponent.prototype.changeRoot = function (title, root) {
+        this.levelsRoots[root] = title;
+        this.generator.mapTypes(this.model, this.levelsRoots);
+        this.generator.extend(this.model);
     };
     ProjectComponent.prototype.changeView = function () {
         if (this.currentView === this.view.Editor) {
@@ -632,10 +657,10 @@ ProjectComponent = __decorate([
         template: __webpack_require__(303),
         styles: [__webpack_require__(298)]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__project_service__["b" /* Find */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__project_service__["b" /* Find */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__project_service__["b" /* Find */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__project_service__["b" /* Find */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__project_service__["a" /* GenerateInfo */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__project_service__["a" /* GenerateInfo */]) === "function" && _b || Object])
 ], ProjectComponent);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=project.component.js.map
 
 /***/ }),
@@ -765,7 +790,7 @@ module.exports = "<div id=\"main\" class=\"container\">\n\t<div class=\"row\">\n
 /***/ 303:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"project-details\">\n\t<div class=\"row\">\n\t\t<ol class=\"breadcrumb\">\n\t\t\t<li [class.active]=\"activeTab === tabs.Project\"><a href=\"#\" (click)=\"activeTab = tabs.Project\">Project</a></li>\n\t\t\t<li [class.active]=\"activeTab === tabs.Attributes\"><a href=\"#\" (click)=\"activeTab = tabs.Attributes\">Attributes</a></li>\n\t\t\t<li [class.active]=\"activeTab === tabs.Hierarchy\"><a href=\"#\" (click)=\"activeTab = tabs.Hierarchy\">Hierarchy</a></li>\n\t\t\t<li [class.active]=\"activeTab === tabs.Documents\"><a href=\"#\" (click)=\"activeTab = tabs.Documents\">Documents</a></li>\n\t\t\t<li [class.active]=\"activeTab === tabs.Users\"><a href=\"#\" (click)=\"activeTab = tabs.Users\">Users</a></li>\n\t\t</ol>\n\t</div>\n\t<div class=\"row modal-body-container\" [ngSwitch]=\"activeTab\">\n\t\t<div class=\"modal-body-wrapper\">\n\t\t\t\n\t\t\n\t\t<ng-container *ngSwitchCase=\"tabs.Project\">\n\t\t\t<div class=\"row-wrap col-lg-6\">\n\t\t\t\t<ul>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t<strong>Project:</strong>\n\t\t\t\t\t\t<span>{{model.name}}</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t<strong>Building:</strong>\n\t\t\t\t\t\t<span>{{model.building}}</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t<strong>Address:</strong>\n\t\t\t\t\t\t<span *ngFor=\"let line of model.address\">{{line}}</span>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t\t<div class=\"row-wrap col-lg-6\">\n\t\t\t\t<div class=\"group\">\n\t\t\t\t\t<strong class=\"subtitle\">Reports</strong>\n\t\t\t\t\t<div class=\"control-panel\">\n\t\t\t\t\t\t<span class=\"btn btn-link\">Create report</span>\n\t\t\t\t\t</div>\t\t\t\t\t\n\t\t\t\t</div>\n\t\t\t\t<ul class=\"list\">\n\t\t\t\t\t<li *ngFor=\"let report of model.reports\">\n\t\t\t\t\t\t<span>{{report}}</span>\n\t\t\t\t\t\t<a href=\"#\" class=\"remove\">X</a>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\t\t\t\t\n\t\t\t</div>\n\t\t</ng-container>\n\t\t<ng-container *ngSwitchCase=\"tabs.Attributes\">\n\t\t\t<div class=\"row-wrap\">\n\t\t\t\t<div class=\"control-panel\">\n\t\t\t\t\t<span class=\"btn btn-link\">Add attribute</span>\n\t\t\t\t</div>\n\t\t\t\t<table class=\"table table-condensed table-hover\">\n\t\t\t\t\t<tr *ngFor=\"let attr of model.attributes\">\n\t\t\t\t\t\t<td>{{attr.name}}</td>\n\t\t\t\t\t\t<td class=\"text-center\">{{attr.value}}</td>\n\t\t\t\t\t\t<td class=\"width-10 text-right\"><a href=\"#\" class=\"remove\">X</a></td>\n\t\t\t\t\t</tr>\n\t\t\t\t</table>\n\t\t\t</div>\n\t\t</ng-container>\n\t\t<ng-container *ngSwitchCase=\"tabs.Hierarchy\">\n\t\n\t\t\t<div [ngSwitch]=\"currentView\">\n\t\t\t\t<div *ngSwitchCase=\"view.Editor\">\n\t\t\t\t\t<div class=\"project-legent\" *ngIf=\"model.types\" [hidden]=\"!openedLevelHeadingPanel\">\n\t\t\t\t\t\t<form class=\"form-inline\">\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level1\">\n\t\t\t\t\t\t\t\t<label class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<p class=\"form-control-static\">Hierarchy 1</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level1\">\n\t\t\t\t\t\t\t\t<label for=\"hierarchy1\" class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control input-sm\" id=\"hierarchy1\" disabled=\"\" placeholder=\"Building\" [(ngModel)]=\"model.types.level1.name\" name=\"level1\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level2\">\n\t\t\t\t\t\t\t\t<label class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<p class=\"form-control-static\">Hierarchy 2</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level2\">\n\t\t\t\t\t\t\t\t<label for=\"hierarchy2\" class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control input-sm\" id=\"hierarchy2\" placeholder=\"Floor\" [(ngModel)]=\"model.types.level2.name\" name=\"level2\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level3\">\n\t\t\t\t\t\t\t\t<label class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<p class=\"form-control-static\">Hierarchy 3</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level3\">\n\t\t\t\t\t\t\t\t<label for=\"hierarchy3\" class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control input-sm\" id=\"hierarchy3\" placeholder=\"Room\" [(ngModel)]=\"model.types.level3.name\" name=\"level3\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level4\">\n\t\t\t\t\t\t\t\t<label class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<p class=\"form-control-static\">Hierarchy 4</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level5\">\n\t\t\t\t\t\t\t\t<label for=\"hierarchy4\" class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control input-sm\" id=\"hierarchy4\" placeholder=\"\" [(ngModel)]=\"model.types.level4.name\" name=\"level4\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</form>\n\t\t\t\t\t\t<span class=\"btn-close glyphicon glyphicon-remove\" (click)=\"toggleLevelHeadingPanel()\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"row-wrap\">\n\t\t\t\t\t<div class=\"control-panel\"  [ngClass]=\"{'back': currentView === view.Viewer}\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-share\" [ngClass]=\"{'glyphicon-chevron-left': currentView === view.Viewer}\" (click)=\"changeView()\" [innerHTML]=\"currentViewLinkText\"></span>\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-edit\" *ngIf=\"currentView !== view.Viewer && !openedLevelHeadingPanel\" (click)=\"toggleLevelHeadingPanel()\">Edit</span>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div *ngSwitchCase=\"view.Editor\">\n\t\t\t\t\t<div class=\"row-wrap\">\n\t\t\t\t\t\t<tree \n\t\t\t\t\t\t\t[editable]=\"true\"\n\t\t\t\t\t\t\t[deepCount]=\"deepCount\"\n\t\t\t\t\t\t\t[level]=\"model.hierarchy\" \n\t\t\t\t\t\t\t[handler]=\"addLevel\" \n\t\t\t\t\t\t\t[handlerRemove]=\"removeLevel\" \n\t\t\t\t\t\t\t[handlerFirst]=\"levelFirst\"\n\t\t\t\t\t\t\t(toggle)=\"toggleLevel($event)\"\n\t\t\t\t\t\t\t(clickRemoveHandler)=\"removeLevel($event)\"\n\t\t\t\t\t\t\t(clickHandler)=\"addLevel($event)\" class=\"hierarchy\">\n\t\t\t\t\t\t</tree>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\t\t\n\t\t\t\t<div *ngSwitchCase=\"view.Viewer\">\n\t\t\t\t\t<d3-tree [data]=\"model.hierarchy\"></d3-tree>\n\t\t\t\t</div>\t\t\t\t\t\n\t\t\t</div>\n\t\t</ng-container>\n\t\t<ng-container *ngSwitchCase=\"tabs.Documents\">\n\t\t\t<div class=\"row-wrap\">\n\t\t\t\t<div class=\"control-panel\">\n\t\t\t\t\t<span class=\"btn btn-link\">Create document</span>\n\t\t\t\t</div>\n\t\t\t\t<ul class=\"list\">\n\t\t\t\t\t<li *ngFor=\"let doc of model.documents\">\n\t\t\t\t\t\t<span>{{doc}}</span>\n\t\t\t\t\t\t<a href=\"#\" class=\"remove\">X</a>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t</ng-container>\n\t\t<ng-container *ngSwitchCase=\"tabs.Users\">\n\t\t\t<div class=\"row-wrap\">\n\t\t\t\t<strong class=\"subtitle\">Assigned users:</strong>\n\t\t\t\t<ul class=\"list-form\">\n\t\t\t\t\t<li *ngFor=\"let user of model.users\">\n\t\t\t\t\t\t<div class=\"checkbox\">\n\t\t\t\t\t\t\t<label>\n\t\t\t\t\t\t\t\t<input type=\"checkbox\"> <span>{{user}}</span>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t</ng-container>\n\t\t</div>\n\t</div>\n</div>"
+module.exports = "<div class=\"project-details\">\n\t<div class=\"row\">\n\t\t<ol class=\"breadcrumb\">\n\t\t\t<li [class.active]=\"activeTab === tabs.Project\"><a href=\"#\" (click)=\"activeTab = tabs.Project\">Project</a></li>\n\t\t\t<li [class.active]=\"activeTab === tabs.Attributes\"><a href=\"#\" (click)=\"activeTab = tabs.Attributes\">Attributes</a></li>\n\t\t\t<li [class.active]=\"activeTab === tabs.Hierarchy\"><a href=\"#\" (click)=\"activeTab = tabs.Hierarchy\">Hierarchy</a></li>\n\t\t\t<li [class.active]=\"activeTab === tabs.Documents\"><a href=\"#\" (click)=\"activeTab = tabs.Documents\">Documents</a></li>\n\t\t\t<li [class.active]=\"activeTab === tabs.Users\"><a href=\"#\" (click)=\"activeTab = tabs.Users\">Users</a></li>\n\t\t</ol>\n\t</div>\n\t<div class=\"row modal-body-container\" [ngSwitch]=\"activeTab\">\n\t\t<div class=\"modal-body-wrapper\">\n\t\t\t\n\t\t\n\t\t<ng-container *ngSwitchCase=\"tabs.Project\">\n\t\t\t<div class=\"row-wrap col-lg-6\">\n\t\t\t\t<ul>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t<strong>Project:</strong>\n\t\t\t\t\t\t<span>{{model.name}}</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t<strong>Building:</strong>\n\t\t\t\t\t\t<span>{{model.building}}</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t<strong>Address:</strong>\n\t\t\t\t\t\t<span *ngFor=\"let line of model.address\">{{line}}</span>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t\t<div class=\"row-wrap col-lg-6\">\n\t\t\t\t<div class=\"group\">\n\t\t\t\t\t<strong class=\"subtitle\">Reports</strong>\n\t\t\t\t\t<div class=\"control-panel\">\n\t\t\t\t\t\t<span class=\"btn btn-link\">Create report</span>\n\t\t\t\t\t</div>\t\t\t\t\t\n\t\t\t\t</div>\n\t\t\t\t<ul class=\"list\">\n\t\t\t\t\t<li *ngFor=\"let report of model.reports\">\n\t\t\t\t\t\t<span>{{report}}</span>\n\t\t\t\t\t\t<a href=\"#\" class=\"remove\">X</a>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\t\t\t\t\n\t\t\t</div>\n\t\t</ng-container>\n\t\t<ng-container *ngSwitchCase=\"tabs.Attributes\">\n\t\t\t<div class=\"row-wrap\">\n\t\t\t\t<div class=\"control-panel\">\n\t\t\t\t\t<span class=\"btn btn-link\">Add attribute</span>\n\t\t\t\t</div>\n\t\t\t\t<table class=\"table table-condensed table-hover\">\n\t\t\t\t\t<tr *ngFor=\"let attr of model.attributes\">\n\t\t\t\t\t\t<td>{{attr.name}}</td>\n\t\t\t\t\t\t<td class=\"text-center\">{{attr.value}}</td>\n\t\t\t\t\t\t<td class=\"width-10 text-right\"><a href=\"#\" class=\"remove\">X</a></td>\n\t\t\t\t\t</tr>\n\t\t\t\t</table>\n\t\t\t</div>\n\t\t</ng-container>\n\t\t<ng-container *ngSwitchCase=\"tabs.Hierarchy\">\n\t\n\t\t\t<div [ngSwitch]=\"currentView\">\n\t\t\t\t<div *ngSwitchCase=\"view.Editor\">\n\t\t\t\t\t<div class=\"project-legent\" [hidden]=\"!openedLevelHeadingPanel\">\n\t\t\t\t\t\t<form class=\"form-inline\">\n\t\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t\t<label class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<p class=\"form-control-static\">Hierarchy 1</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t\t<label for=\"hierarchy1\" class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control input-sm\" id=\"hierarchy1\" disabled=\"\" placeholder=\"Building\" [(ngModel)]=\"levelsRoots.h1\" name=\"level1\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t\t<label class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<p class=\"form-control-static\">Hierarchy 2</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t\t<label for=\"hierarchy2\" class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control input-sm\" id=\"hierarchy2\" placeholder=\"Floor\" [(ngModel)]=\"levelsRoots.h2\" name=\"level2\" (ngModelChange)=\"changeRoot($event, 'h2')\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t\t<label class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<p class=\"form-control-static\">Hierarchy 3</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t\t<label for=\"hierarchy3\" class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control input-sm\" id=\"hierarchy3\" placeholder=\"Room\" [(ngModel)]=\"levelsRoots.h3\" name=\"level3\" (ngModelChange)=\"changeRoot($event, 'h3')\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t\t<label class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<p class=\"form-control-static\">Hierarchy 4</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t\t\t<label for=\"hierarchy4\" class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control input-sm\" id=\"hierarchy4\" placeholder=\"\" [(ngModel)]=\"levelsRoots.h4\" name=\"level4\" (ngModelChange)=\"changeRoot($event, 'h4')\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</form>\n\t\t\t\t\t\t<span class=\"btn-close glyphicon glyphicon-remove\" (click)=\"toggleLevelHeadingPanel()\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<!-- <div class=\"project-legent\" *ngIf=\"model.types\" [hidden]=\"!openedLevelHeadingPanel\">\n\t\t\t\t\t\t<form class=\"form-inline\">\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level1\">\n\t\t\t\t\t\t\t\t<label class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<p class=\"form-control-static\">Hierarchy 1</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level1\">\n\t\t\t\t\t\t\t\t<label for=\"hierarchy1\" class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control input-sm\" id=\"hierarchy1\" disabled=\"\" placeholder=\"Building\" [(ngModel)]=\"model.types.level1.name\" name=\"level1\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level2\">\n\t\t\t\t\t\t\t\t<label class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<p class=\"form-control-static\">Hierarchy 2</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level2\">\n\t\t\t\t\t\t\t\t<label for=\"hierarchy2\" class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control input-sm\" id=\"hierarchy2\" placeholder=\"Floor\" [(ngModel)]=\"model.types.level2.name\" name=\"level2\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level3\">\n\t\t\t\t\t\t\t\t<label class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<p class=\"form-control-static\">Hierarchy 3</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level3\">\n\t\t\t\t\t\t\t\t<label for=\"hierarchy3\" class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control input-sm\" id=\"hierarchy3\" placeholder=\"Room\" [(ngModel)]=\"model.types.level3.name\" name=\"level3\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level4\">\n\t\t\t\t\t\t\t\t<label class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<p class=\"form-control-static\">Hierarchy 4</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"form-group\" *ngIf=\"model.types.level5\">\n\t\t\t\t\t\t\t\t<label for=\"hierarchy4\" class=\"sr-only\">Hierarchy</label>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control input-sm\" id=\"hierarchy4\" placeholder=\"\" [(ngModel)]=\"model.types.level4.name\" name=\"level4\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</form>\n\t\t\t\t\t\t<span class=\"btn-close glyphicon glyphicon-remove\" (click)=\"toggleLevelHeadingPanel()\"></span>\n\t\t\t\t\t</div> -->\n\t\t\t\t</div>\n\t\t\t\t<div class=\"row-wrap\">\n\t\t\t\t\t<div class=\"control-panel\"  [ngClass]=\"{'back': currentView === view.Viewer}\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-share\" [ngClass]=\"{'glyphicon-chevron-left': currentView === view.Viewer}\" (click)=\"changeView()\" [innerHTML]=\"currentViewLinkText\"></span>\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-edit\" *ngIf=\"currentView !== view.Viewer && !openedLevelHeadingPanel\" (click)=\"toggleLevelHeadingPanel()\">Edit</span>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div *ngSwitchCase=\"view.Editor\">\n\t\t\t\t\t<div class=\"row-wrap\">\n\t\t\t\t\t\t<tree \n\t\t\t\t\t\t\t[editable]=\"true\"\n\t\t\t\t\t\t\t[deepCount]=\"deepCount\"\n\t\t\t\t\t\t\t[level]=\"model.hierarchy\" \n\t\t\t\t\t\t\t[handler]=\"addLevel\" \n\t\t\t\t\t\t\t[handlerRemove]=\"removeLevel\" \n\t\t\t\t\t\t\t[handlerFirst]=\"levelFirst\"\n\t\t\t\t\t\t\t(toggle)=\"toggleLevel($event)\"\n\t\t\t\t\t\t\t(clickRemoveHandler)=\"removeLevel($event)\"\n\t\t\t\t\t\t\t(clickHandler)=\"addLevel($event)\" class=\"hierarchy\">\n\t\t\t\t\t\t</tree>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\t\t\n\t\t\t\t<div *ngSwitchCase=\"view.Viewer\">\n\t\t\t\t\t<d3-tree [data]=\"model.hierarchy\"></d3-tree>\n\t\t\t\t</div>\t\t\t\t\t\n\t\t\t</div>\n\t\t</ng-container>\n\t\t<ng-container *ngSwitchCase=\"tabs.Documents\">\n\t\t\t<div class=\"row-wrap\">\n\t\t\t\t<div class=\"control-panel\">\n\t\t\t\t\t<span class=\"btn btn-link\">Create document</span>\n\t\t\t\t</div>\n\t\t\t\t<ul class=\"list\">\n\t\t\t\t\t<li *ngFor=\"let doc of model.documents\">\n\t\t\t\t\t\t<span>{{doc}}</span>\n\t\t\t\t\t\t<a href=\"#\" class=\"remove\">X</a>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t</ng-container>\n\t\t<ng-container *ngSwitchCase=\"tabs.Users\">\n\t\t\t<div class=\"row-wrap\">\n\t\t\t\t<strong class=\"subtitle\">Assigned users:</strong>\n\t\t\t\t<ul class=\"list-form\">\n\t\t\t\t\t<li *ngFor=\"let user of model.users\">\n\t\t\t\t\t\t<div class=\"checkbox\">\n\t\t\t\t\t\t\t<label>\n\t\t\t\t\t\t\t\t<input type=\"checkbox\"> <span>{{user}}</span>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t</ng-container>\n\t\t</div>\n\t</div>\n</div>"
 
 /***/ }),
 
@@ -884,70 +909,52 @@ var Enums = {
                                     type: 'Floor',
                                     children: [
                                         {
-                                            name: 'Area B1A',
-                                            type: 'Area',
-                                            children: [
-                                                {
-                                                    name: 'Room A101',
-                                                    type: 'Room'
-                                                },
-                                                {
-                                                    name: 'Room A102',
-                                                    type: 'Room'
-                                                },
-                                                {
-                                                    name: 'Room A103',
-                                                    type: 'Room'
-                                                },
-                                                {
-                                                    name: 'Room A104',
-                                                    type: 'Room'
-                                                },
-                                                {
-                                                    name: 'Room A105',
-                                                    type: 'Room'
-                                                }
-                                            ]
+                                            name: 'Room A101',
+                                            type: 'Room'
                                         },
                                         {
-                                            name: 'Area B1B',
-                                            type: 'Area',
-                                            children: [
-                                                {
-                                                    name: 'Room B111',
-                                                    type: 'Room'
-                                                },
-                                                {
-                                                    name: 'Room B112',
-                                                    type: 'Room'
-                                                },
-                                                {
-                                                    name: 'Room B113',
-                                                    type: 'Room'
-                                                },
-                                                {
-                                                    name: 'Room B114',
-                                                    type: 'Room'
-                                                },
-                                                {
-                                                    name: 'Room B115',
-                                                    type: 'Room'
-                                                }
-                                            ]
+                                            name: 'Room A102',
+                                            type: 'Room'
                                         },
                                         {
-                                            name: 'Area B1C',
-                                            type: 'Area',
-                                            children: [
-                                                {
-                                                    name: 'Room - Open space #1',
-                                                    type: 'Room'
-                                                },
-                                                {
-                                                    name: 'Room - Open space #2',
-                                                    type: 'Room'
-                                                }
-                                            ]
+                                            name: 'Room A103',
+                                            type: 'Room'
+                                        },
+                                        {
+                                            name: 'Room A104',
+                                            type: 'Room'
+                                        },
+                                        {
+                                            name: 'Room A105',
+                                            type: 'Room'
+                                        },
+                                        {
+                                            name: 'Room B111',
+                                            type: 'Room'
+                                        },
+                                        {
+                                            name: 'Room B112',
+                                            type: 'Room'
+                                        },
+                                        {
+                                            name: 'Room B113',
+                                            type: 'Room'
+                                        },
+                                        {
+                                            name: 'Room B114',
+                                            type: 'Room'
+                                        },
+                                        {
+                                            name: 'Room B115',
+                                            type: 'Room'
+                                        },
+                                        {
+                                            name: 'Room - Open space #1',
+                                            type: 'Room'
+                                        },
+                                        {
+                                            name: 'Room - Open space #2',
+                                            type: 'Room'
                                         }
                                     ]
                                 },
@@ -956,34 +963,16 @@ var Enums = {
                                     type: 'Floor',
                                     children: [
                                         {
-                                            name: 'Area B2A',
-                                            type: 'Area',
-                                            children: [
-                                                {
-                                                    name: 'Level 6',
-                                                    type: 'Room'
-                                                }
-                                            ]
+                                            name: 'Room - Open space #3',
+                                            type: 'Room'
                                         },
                                         {
-                                            name: 'Area B2B',
-                                            type: 'Area',
-                                            children: [
-                                                {
-                                                    name: 'Level 6',
-                                                    type: 'Room'
-                                                }
-                                            ]
+                                            name: 'Room - Open space #4',
+                                            type: 'Room'
                                         },
                                         {
-                                            name: 'Area B2C',
-                                            type: 'Area',
-                                            children: [
-                                                {
-                                                    name: 'Level 6',
-                                                    type: 'Room'
-                                                }
-                                            ]
+                                            name: 'Room - Open space #5',
+                                            type: 'Room'
                                         }
                                     ]
                                 }
@@ -1065,7 +1054,7 @@ var Enums = {
 
 /***/ }),
 
-/***/ 56:
+/***/ 45:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1079,6 +1068,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 
+var reduce = Function.bind.call(Function.call, Array.prototype.reduce);
+var isEnumerable = Function.bind.call(Function.call, Object.prototype.propertyIsEnumerable);
+var concat = Function.bind.call(Function.call, Array.prototype.concat);
+var keys = Reflect.ownKeys;
 var Find = (function () {
     function Find() {
     }
@@ -1105,6 +1098,30 @@ var Find = (function () {
         }
         return null;
     };
+    Find.values = function (O) {
+        return reduce(keys(O), function (v, k) { return concat(v, typeof k === 'string' && isEnumerable(O, k) ? [O[k]] : []); }, []);
+    };
+    Find.byLevel = function (obj, level) {
+        var result = [];
+        var depth = 0;
+        go(obj);
+        return result;
+        function go(obj) {
+            depth++;
+            if (depth - 1 < level) {
+                if (!!obj.children && !!obj.children.length) {
+                    for (var i = 0; i < obj.children.length; i++) {
+                        go(obj.children[i]);
+                    }
+                }
+                depth--;
+            }
+            else if (depth - 1 === level) {
+                result.push(obj);
+                depth--;
+            }
+        }
+    };
     return Find;
 }());
 Find = __decorate([
@@ -1127,6 +1144,16 @@ var GenerateInfo = (function () {
         project.types = stats[1];
         return project;
     };
+    GenerateInfo.prototype.mapTypes = function (project, types) {
+        var typesName = Find.values(types);
+        var building = project.hierarchy;
+        for (var i = 1; i < typesName.length; i++) {
+            var buildingLevelEntity = Find.byLevel(building, i);
+            for (var y = 0; y < buildingLevelEntity.length; y++) {
+                buildingLevelEntity[y].type = typesName[i];
+            }
+        }
+    };
     GenerateInfo.prototype.stats = function (project) {
         var levelDeep = 0;
         var result = {};
@@ -1137,7 +1164,7 @@ var GenerateInfo = (function () {
             var o = {};
             for (var key in result) {
                 count++;
-                o['level' + count] = {
+                o['h' + count] = {
                     name: key,
                     count: result[key].count
                 };
